@@ -316,7 +316,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, onMounted } from "vue";
 import { copyToClipboard, useQuasar } from "quasar";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
@@ -324,11 +324,11 @@ import { useI18n } from "vue-i18n";
 import HighLight from "../../components/HighLight.vue";
 import { byString } from "../../utils/json";
 import DetailTable from "./DetailTable.vue";
-import useLogs from "../../composables/useLogs";
 import BarChart from "../../components/logBarChart.vue";
 import { getImageURL } from "../../utils/zincutils";
 import EqualIcon from "../../components/icons/EqualIcon.vue";
 import NotEqualIcon from "../../components/icons/NotEqualIcon.vue";
+import useLogs from "../../composables/useLogs";
 
 export default defineComponent({
   name: "SearchResult",
@@ -390,7 +390,8 @@ export default defineComponent({
     onTimeBoxed(obj: any) {
       this.searchObj.meta.showDetailTab = false;
       this.searchObj.data.searchAround.indexTimestamp = obj.key;
-      this.$emit("search:timeboxed", obj);
+      // this.$emit("search:timeboxed", obj);
+      this.searchAroundData(obj);
     },
   },
   setup(props, { emit }) {
@@ -401,13 +402,20 @@ export default defineComponent({
     const $q = useQuasar();
     const searchListContainer = ref(null);
 
-    const { searchObj, updatedLocalLogFilterField } = useLogs();
+    const { searchObj, updatedLocalLogFilterField, searchAroundData } =
+      useLogs();
     const totalHeight = ref(0);
 
     const searchTableRef: any = ref(null);
 
     const plotChart: any = ref(null);
     const expandedLogs: any = ref({});
+
+    onMounted(() => {
+      setTimeout(() => {
+        reDrawChart();
+      }, 500);
+    });
 
     const reDrawChart = () => {
       if (
@@ -500,6 +508,7 @@ export default defineComponent({
       updatedLocalLogFilterField,
       byString,
       searchTableRef,
+      searchAroundData,
       addSearchTerm,
       removeSearchTerm,
       expandRowDetail,
