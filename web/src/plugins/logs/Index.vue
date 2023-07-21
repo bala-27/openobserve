@@ -200,6 +200,7 @@ import {
   computed,
   onBeforeMount,
   nextTick,
+  defineAsyncComponent,
 } from "vue";
 import { useQuasar, date, is } from "quasar";
 import { useStore } from "vuex";
@@ -211,7 +212,7 @@ import IndexList from "./IndexList.vue";
 import SearchResult from "./SearchResult.vue";
 import useLogs from "@/composables/useLogs";
 import { deepKeys, byString } from "@/utils/json";
-import { Parser } from "node-sql-parser";
+import { Parser } from "node-sql-parser/build/mysql";
 
 import streamService from "@/services/stream";
 import searchService from "@/services/search";
